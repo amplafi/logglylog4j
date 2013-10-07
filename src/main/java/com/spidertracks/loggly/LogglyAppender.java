@@ -10,8 +10,9 @@ import org.apache.log4j.helpers.LogLog;
 import org.apache.log4j.spi.LoggingEvent;
 
 /**
- * Currently uses an asynchronous blocking queue to write messages. Messages are written to files with sequential identifiers, these sequential files are then read by the reader thread. When a file is
- * fully consumed, it is removed.
+ * Currently uses an asynchronous blocking queue to write messages. 
+ * Messages are written to files with sequential identifiers, these sequential files are then read by the reader thread. 
+ * When a file is fully consumed, it is removed.
  *
  * @author Todd Nine
  */
@@ -21,11 +22,11 @@ public class LogglyAppender extends AppenderSkeleton {
 
     private EmbeddedDb db;
 
-    // private LogglyMessageQueue messageQ;
-
     private String dirName;
 
     private String logglyUrl;
+    
+    private String logglyTags;
 
     private int batchSize = 50;
 
@@ -176,7 +177,7 @@ public class LogglyAppender extends AppenderSkeleton {
                             }
                             }
                         } catch (IOException e) {
-                            errorHandler.error(String.format("Unable to send data to loggly at URL %s", logglyUrl), e, 2);
+                            errorHandler.error(String.format("Unable to send data to loggly at URL %s", getLogglyPreparedURL()), e, 2);
                         }
                     }
 
@@ -242,7 +243,7 @@ public class LogglyAppender extends AppenderSkeleton {
          */
 
         private int sendData(List<Entry> messages) throws IOException {
-            URL url = new URL(logglyUrl);
+            URL url = new URL(getLogglyPreparedURL());
             Proxy proxy = Proxy.NO_PROXY;
             if (proxyHost != null) {
                 SocketAddress addr = new InetSocketAddress(proxyHost, proxyPort);
@@ -283,14 +284,24 @@ public class LogglyAppender extends AppenderSkeleton {
                     while ((value = in.read()) != -1) {
                         response.append((char) value);
                     }
-                    errorHandler.error(String.format("Unable to send data to loggly at URL %s Response %s (Logging error, this will not functioning of the main program)", logglyUrl,
+                    errorHandler.error(String.format("Unable to send data to loggly at URL %s Response %s (Logging error, this will not functioning of the main program)", getLogglyPreparedURL(),
                             response));
                 } catch (IOException ee) {
-                    errorHandler.error(String.format("Unable to send data to loggly at URL %s (Logging error, this will not functioning of the main program)", logglyUrl), e, 2);
+                    errorHandler.error(String.format("Unable to send data to loggly at URL %s (Logging error, this will not functioning of the main program)", getLogglyPreparedURL()), e, 2);
                 }
             }
             return respCode;
         }
+
+		/**
+		 * @return URL to loggly with tags appended if exist.
+		 */
+		private String getLogglyPreparedURL() {
+			if (logglyTags != null && !logglyTags.isEmpty()) {
+				return logglyUrl + "/tag/" + logglyTags;
+			}
+			return logglyUrl;
+		}
 
         /**
          * Stop this thread sending data and write the last read position
@@ -361,5 +372,14 @@ public class LogglyAppender extends AppenderSkeleton {
     public void setBatchSize(int batchSize) {
         this.batchSize = batchSize;
     }
+
+	/**
+	 * Tags, which Loggly will apply as meta data to your event.
+	 * 
+	 * @param logglyTags
+	 */
+	public void setLogglyTags(String logglyTags) {
+		this.logglyTags = logglyTags;
+	}
 
 }

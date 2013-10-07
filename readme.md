@@ -9,6 +9,7 @@ Usage is relatively straight forward.
       class="com.spidertracks.loggly.LogglyAppender">
       <param name="dirName" value="A working directory to store the HSQL queue buffer" />
       <param name="logglyUrl" value="Your loggly url goes here" /> 
+      <param name="logglyTags" value="Your loggly tags goes here" /> <!-- Optional value --> 
       <param name="proxyHost" value="A dns name or an ip address"/> <!-- Optional value -->
       <param name="proxyPort" value="The port number for the proxy"/> <!-- Optional value -->
       <!-- The maximum number of messages to upload in a single http POST -->
@@ -23,7 +24,8 @@ or
 
     log4j.appender.loggly=com.spidertracks.loggly.LogglyAppender
     log4j.appender.loggly.dirName=logs/
-    log4j.appender.loggly.logglyUrl=https://logs.loggly.com/inputs/xxxxx-xxxx
+    log4j.appender.loggly.logglyUrl=https://logs-01.loggly.com/inputs/xxxxx-xxxx
+    log4j.appender.loggly.logglyTags=myApp1,newYork,middleware
     log4j.appender.loggly.proxyHost=example.com
     log4j.appender.loggly.proxyPort=8080
     log4j.appender.loggly.batchSize=50
@@ -44,4 +46,5 @@ This supports guaranteed delivery.  If the logger cannot contact Loggly,
      Excepts when the request http status codes i 400 Bad Request - then the messages is dumped.
      ex. a too large message.
 
-
+# Authentic source
+http://www.loggly.com/docs/api-sending-data/

@@ -4,3 +4,4 @@
 .project
 logs
 /pom.xml.versionsBackup
+/bin
