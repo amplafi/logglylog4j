@@ -64,11 +64,15 @@ public class LogglyAppender extends AppenderSkeleton {
         /**
          * We always only produce to the current file. So there's no need for locking
          */
-
         assert this.layout != null : "Cannot log, there is no layout configured.";
 
         String output = this.layout.format(event);
-
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        if (event.getThrowableInformation() != null && event.getThrowableInformation().getThrowable() != null) {
+        	event.getThrowableInformation().getThrowable().printStackTrace(pw);
+        	output += sw.toString().replace("\t", "<\br>");
+        }
         synchronized (waitLock) {
             db.writeEntry(output, System.nanoTime());
             waitLock.notify();
@@ -241,7 +245,6 @@ public class LogglyAppender extends AppenderSkeleton {
          * @param message
          * @throws IOException
          */
-
         private int sendData(List<Entry> messages) throws IOException {
             URL url = new URL(getLogglyPreparedURL());
             Proxy proxy = Proxy.NO_PROXY;
@@ -306,7 +309,6 @@ public class LogglyAppender extends AppenderSkeleton {
         /**
          * Stop this thread sending data and write the last read position
          */
-
         public void stop() {
             LogLog.debug("Loggly: Stopping background thread");
             requestedState = ThreadState.STOPPED;
