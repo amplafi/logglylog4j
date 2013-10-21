@@ -1,6 +1,3 @@
-/*
- *  $Id$
- */
 package com.spidertracks.loggly;
 
 import java.util.Properties;
@@ -53,7 +50,7 @@ public class LogglyAppenderManualTest {
 
         loggingProperties.setProperty("log4j.appender.loggly","com.spidertracks.loggly.LogglyAppender");
         loggingProperties.setProperty("log4j.appender.loggly.dirName","logs/");
-        loggingProperties.setProperty("log4j.appender.loggly.logglyUrl","https://logs.loggly.com/inputs/" + apiKey);
+        loggingProperties.setProperty("log4j.appender.loggly.logglyUrl","https://logs-01.loggly.com/inputs/" + apiKey);
         loggingProperties.setProperty("log4j.appender.loggly.batchSize","50");
         loggingProperties.setProperty("log4j.appender.loggly.layout","org.apache.log4j.EnhancedPatternLayout");
         loggingProperties.setProperty("log4j.appender.loggly.layout.ConversionPattern","%d{ISO8601}{GMT}Z %5p [%t]  %m%n");

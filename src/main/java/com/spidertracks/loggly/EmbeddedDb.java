@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.spidertracks.loggly;
 
 import java.sql.*;
