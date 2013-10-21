@@ -116,9 +116,9 @@ public class LogglyAppender extends AppenderSkeleton {
     private class HttpPost implements Runnable {
 
         /**
-         * Loggly max message size as stated by http://www.loggly.com/blog/2011/09/logging-out-of-your-java-code/
+         * Loggly max message size as stated by https://loggly.desk.com/customer/portal/questions/3431783-maximum-rest-api-request-size
          */
-        private static final int LOGGLY_MAX_MESSAGE_SIZE = 32 * 1024;
+        private static final int LOGGLY_MAX_MESSAGE_SIZE = 1024 * 1024;
 
         // State variables needs to be volatile, otherwise it can be cached local to the thread and stop() will never work
         volatile ThreadState curState = ThreadState.START;
