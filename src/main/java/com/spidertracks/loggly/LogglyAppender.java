@@ -71,7 +71,7 @@ public class LogglyAppender extends AppenderSkeleton {
         PrintWriter pw = new PrintWriter(sw);
         if (event.getThrowableInformation() != null && event.getThrowableInformation().getThrowable() != null) {
         	event.getThrowableInformation().getThrowable().printStackTrace(pw);
-        	output += sw.toString().replace("\t", "<\br>");
+        	output += sw.toString();
         }
         synchronized (waitLock) {
             db.writeEntry(output, System.nanoTime());
